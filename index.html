@@ -1,468 +1,505 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Painel ADM — IA Comercial</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel ADM - IA Comercial</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',sans-serif;background:#0f0f1a;color:#e2e8f0;min-height:100vh}
-.sidebar{position:fixed;left:0;top:0;bottom:0;width:240px;background:#1a1a2e;border-right:1px solid #2d2d4e;display:flex;flex-direction:column}
-.logo{padding:24px 20px;font-size:18px;font-weight:700;color:#a78bfa;border-bottom:1px solid #2d2d4e;display:flex;align-items:center;gap:10px}
-nav{padding:16px 0;flex:1}
-.nav-item{display:flex;align-items:center;gap:12px;padding:12px 20px;cursor:pointer;font-size:14px;color:#94a3b8;transition:all .2s;border-left:3px solid transparent}
-.nav-item:hover{color:#e2e8f0;background:#252540}
-.nav-item.active{color:#a78bfa;background:#1e1e38;border-left-color:#a78bfa}
-.nav-icon{font-size:18px;width:22px}
-.main{margin-left:240px;padding:32px}
-.page{display:none}.page.active{display:block}
-h1{font-size:24px;font-weight:700;margin-bottom:6px;color:#f1f5f9}
-.subtitle{color:#64748b;font-size:14px;margin-bottom:28px}
-.card{background:#1a1a2e;border:1px solid #2d2d4e;border-radius:12px;padding:24px;margin-bottom:20px}
-.card h3{font-size:15px;font-weight:600;margin-bottom:16px;color:#c4b5fd}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
-.stat-card{background:#1a1a2e;border:1px solid #2d2d4e;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:6px}
-.stat-label{font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:.5px}
-.stat-value{font-size:30px;font-weight:700;color:#a78bfa}
-.stat-sub{font-size:12px;color:#475569}
-label{display:block;font-size:13px;color:#94a3b8;margin-bottom:5px}
-input,textarea,select{width:100%;padding:10px 14px;background:#0f0f1a;border:1px solid #2d2d4e;border-radius:8px;color:#e2e8f0;font-size:14px;outline:none;transition:border .2s;font-family:'Segoe UI',sans-serif}
-input:focus,textarea:focus,select:focus{border-color:#7c3aed}
-textarea{resize:vertical;min-height:90px}
-.textarea-prompt{min-height:320px;font-size:14px;line-height:1.7}
-.form-group{margin-bottom:16px}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.btn{padding:10px 20px;border-radius:8px;border:none;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
-.btn-primary{background:#7c3aed;color:#fff}
-.btn-primary:hover{background:#6d28d9}
-.btn-success{background:#059669;color:#fff}
-.btn-success:hover{background:#047857}
-.btn-danger{background:#dc2626;color:#fff}
-.btn-danger:hover{background:#b91c1c}
-.btn-ghost{background:transparent;color:#94a3b8;border:1px solid #2d2d4e}
-.btn-ghost:hover{border-color:#7c3aed;color:#a78bfa}
-.table{width:100%;border-collapse:collapse}
-.table th{text-align:left;padding:12px 16px;font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid #2d2d4e}
-.table td{padding:14px 16px;font-size:14px;border-bottom:1px solid #1e1e38;vertical-align:middle}
-.table tr:last-child td{border-bottom:none}
-.table tr:hover td{background:#1e1e38}
-.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
-.bg{background:#064e3b;color:#34d399}
-.br{background:#450a0a;color:#f87171}
-.bp{background:#2e1065;color:#c4b5fd}
-.bb{background:#0c1a4a;color:#60a5fa}
-.by{background:#451a03;color:#fbbf24}
-.action-btns{display:flex;gap:8px}
-.icon-btn{width:32px;height:32px;border-radius:6px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .2s}
-.ibe{background:#1e293b;color:#60a5fa}.ibe:hover{background:#1e40af}
-.ibd{background:#1e293b;color:#f87171}.ibd:hover{background:#7f1d1d}
-.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:100;align-items:center;justify-content:center}
-.modal-overlay.open{display:flex}
-.modal{background:#1a1a2e;border:1px solid #2d2d4e;border-radius:16px;padding:32px;width:640px;max-width:95vw;max-height:90vh;overflow-y:auto}
-.modal h2{font-size:20px;font-weight:700;margin-bottom:22px;color:#f1f5f9}
-.modal-footer{display:flex;justify-content:flex-end;gap:10px;margin-top:22px}
-.step-card{background:#0f0f1a;border:1px solid #2d2d4e;border-radius:10px;padding:16px;margin-bottom:12px;display:flex;align-items:flex-start;gap:16px}
-.step-num{width:36px;height:36px;border-radius:50%;background:#7c3aed;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0}
-.step-body{flex:1}
-.step-title{font-weight:600;margin-bottom:5px;font-size:15px}
-.step-msg{font-size:13px;color:#64748b;line-height:1.5}
-.step-meta{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
-.alert{padding:13px 16px;border-radius:8px;margin-bottom:16px;font-size:14px}
-.alert-ok{background:#064e3b;color:#34d399;border:1px solid #065f46}
-.alert-err{background:#450a0a;color:#f87171;border:1px solid #7f1d1d}
-.empty{text-align:center;padding:48px;color:#475569}
-.empty .ei{font-size:48px;margin-bottom:12px}
-.loading{text-align:center;padding:32px;color:#64748b;font-size:14px}
-.prompt-tip{font-size:12px;color:#64748b;margin-top:6px;line-height:1.6}
-.char-count{font-size:11px;color:#475569;text-align:right;margin-top:4px}
-
-.sim-typing{display:flex;align-items:center;gap:6px;padding:12px 16px;background:#1e1e38;border-radius:4px 16px 16px 16px;width:fit-content}
-.sim-typing span{width:8px;height:8px;background:#a78bfa;border-radius:50%;animation:bounce .8s infinite}
-.sim-typing span:nth-child(2){animation-delay:.15s}
-.sim-typing span:nth-child(3){animation-delay:.3s}
-@keyframes bounce{0%,80%,100%{transform:scale(0.6);opacity:.4}40%{transform:scale(1);opacity:1}}
-
-.upload-zone{border:2px dashed #2d2d4e;border-radius:10px;padding:24px;text-align:center;cursor:pointer;transition:all .2s;position:relative;background:#0f0f1a}
-.upload-zone:hover,.upload-zone.dragover{border-color:#7c3aed;background:#1a1038}
-.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.upload-zone .uz-icon{font-size:32px;margin-bottom:8px}
-.upload-zone .uz-label{font-size:13px;color:#64748b}
-.upload-zone .uz-sub{font-size:11px;color:#475569;margin-top:4px}
-.upload-preview{margin-top:10px;display:flex;align-items:center;gap:12px;padding:10px 14px;background:#1a1a2e;border-radius:8px;border:1px solid #2d2d4e}
-.upload-preview img,.upload-preview video{max-width:80px;max-height:60px;border-radius:6px;object-fit:cover}
-.upload-preview .prev-info{flex:1;font-size:12px}
-.upload-preview .prev-name{color:#e2e8f0;font-weight:600;margin-bottom:2px}
-.upload-preview .prev-size{color:#64748b}
-.upload-bar{height:4px;background:#2d2d4e;border-radius:4px;margin-top:8px;overflow:hidden}
-.upload-bar-fill{height:100%;background:#7c3aed;width:0%;transition:width .3s;border-radius:4px}
-.upload-ok{color:#34d399;font-size:12px;margin-top:6px;font-weight:600}
-.upload-err{color:#f87171;font-size:12px;margin-top:6px}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; background: #f0f2f5; color: #333; }
+.header { background: #6c3fc5; color: white; padding: 16px 24px; display: flex; align-items: center; gap: 12px; }
+.header h1 { font-size: 20px; }
+.tabs { display: flex; background: white; border-bottom: 2px solid #e0e0e0; padding: 0 24px; gap: 4px; overflow-x: auto; }
+.tab { padding: 14px 20px; cursor: pointer; border-bottom: 3px solid transparent; font-weight: 600; color: #666; white-space: nowrap; transition: all 0.2s; }
+.tab.active { color: #6c3fc5; border-bottom-color: #6c3fc5; }
+.tab:hover { color: #6c3fc5; background: #f9f6ff; }
+.content { padding: 24px; max-width: 900px; margin: 0 auto; }
+.panel { display: none; }
+.panel.active { display: block; }
+.card { background: white; border-radius: 12px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.card h2 { font-size: 18px; margin-bottom: 16px; color: #6c3fc5; }
+label { display: block; font-weight: 600; margin-bottom: 6px; margin-top: 14px; color: #444; }
+input, textarea, select { width: 100%; padding: 10px 14px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; font-family: Arial; }
+textarea { min-height: 100px; resize: vertical; }
+.btn { display: inline-block; padding: 10px 22px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.2s; }
+.btn-primary { background: #6c3fc5; color: white; }
+.btn-primary:hover { background: #5a32a3; }
+.btn-danger { background: #e53e3e; color: white; }
+.btn-success { background: #38a169; color: white; }
+.btn-sm { padding: 6px 14px; font-size: 13px; }
+.flex { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.flex-end { justify-content: flex-end; }
+.mt { margin-top: 16px; }
+.item-list { margin-top: 16px; }
+.item { background: #f8f6ff; border: 1px solid #e0d5f5; border-radius: 10px; padding: 14px; margin-bottom: 10px; }
+.item-title { font-weight: 700; font-size: 15px; color: #333; }
+.item-sub { font-size: 13px; color: #666; margin-top: 4px; }
+.badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+.badge-green { background: #c6f6d5; color: #276749; }
+.badge-red { background: #fed7d7; color: #9b2c2c; }
+.badge-blue { background: #bee3f8; color: #2c5282; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.msg { padding: 12px 16px; border-radius: 8px; margin-bottom: 12px; font-size: 14px; }
+.msg-success { background: #c6f6d5; color: #276749; }
+.msg-error { background: #fed7d7; color: #9b2c2c; }
+.msg-info { background: #bee3f8; color: #2c5282; }
+.empty { text-align: center; padding: 40px; color: #999; }
+.sim-box { background: #f0f0f0; border-radius: 12px; padding: 16px; height: 350px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+.msg-bot { background: white; border-radius: 10px 10px 10px 2px; padding: 10px 14px; max-width: 80%; box-shadow: 0 1px 3px rgba(0,0,0,0.1); font-size: 14px; align-self: flex-start; }
+.msg-user { background: #6c3fc5; color: white; border-radius: 10px 10px 2px 10px; padding: 10px 14px; max-width: 80%; font-size: 14px; align-self: flex-end; }
+.sim-input { display: flex; gap: 8px; margin-top: 12px; }
+.sim-input input { flex: 1; }
+.loading { color: #999; font-style: italic; font-size: 13px; }
+.api-status { font-size: 12px; padding: 4px 10px; border-radius: 20px; }
+.api-ok { background: #c6f6d5; color: #276749; }
+.api-err { background: #fed7d7; color: #9b2c2c; }
+@media(max-width:600px) { .form-row { grid-template-columns: 1fr; } .content { padding: 12px; } }
 </style>
 </head>
 <body>
 
-<div class="sidebar">
-  <div class="logo"><span>🤖</span> IA Comercial</div>
-  <nav>
-    <div class="nav-item active" data-page="dashboard" onclick="nav(this,'dashboard')"><span class="nav-icon">📊</span>Dashboard</div>
-    <div class="nav-item" data-page="produtos" onclick="nav(this,'produtos')"><span class="nav-icon">📦</span>Produtos</div>
-    <div class="nav-item" data-page="midias" onclick="nav(this,'midias')"><span class="nav-icon">🖼️</span>Mídias</div>
-    <div class="nav-item" data-page="flowsteps" onclick="nav(this,'flowsteps')"><span class="nav-icon">🔄</span>Fluxo de Vendas</div>
-    <div class="nav-item" data-page="faq" onclick="nav(this,'faq')"><span class="nav-icon">❓</span>FAQ</div>
-    <div class="nav-item" data-page="prompt" onclick="nav(this,'prompt')"><span class="nav-icon">🧠</span>Prompt do Agente</div>
-    <div class="nav-item" data-page="config" onclick="nav(this,'config')"><span class="nav-icon">⚙️</span>Configurações</div>
-    <div class="nav-item" data-page="simulador" onclick="nav(this,'simulador')"><span class="nav-icon">💬</span>Simulador</div>
-  </nav>
+<div class="header">
+  <span style="font-size:28px">🤖</span>
+  <div>
+    <h1>Painel ADM — IA Comercial</h1>
+    <span id="apiStatus" class="api-status api-err">⏳ Conectando...</span>
+  </div>
 </div>
 
-<div class="main">
+<div class="tabs">
+  <div class="tab active" onclick="showTab('config')">⚙️ Configurações</div>
+  <div class="tab" onclick="showTab('produtos')">📦 Produtos</div>
+  <div class="tab" onclick="showTab('faq')">❓ FAQ</div>
+  <div class="tab" onclick="showTab('fluxo')">🔄 Fluxo</div>
+  <div class="tab" onclick="showTab('simulador')">💬 Simulador</div>
+</div>
 
-<!-- DASHBOARD -->
-<div id="page-dashboard" class="page active">
-  <h1>Dashboard</h1>
-  <p class="subtitle">Visão geral da sua IA Comercial</p>
-  <div class="grid3" style="margin-bottom:24px">
-    <div class="stat-card"><div class="stat-label">Produtos</div><div class="stat-value" id="cnt-prod">—</div><div class="stat-sub">no catálogo</div></div>
-    <div class="stat-card"><div class="stat-label">Etapas do Fluxo</div><div class="stat-value" id="cnt-steps">—</div><div class="stat-sub">configuradas</div></div>
-    <div class="stat-card"><div class="stat-label">FAQ</div><div class="stat-value" id="cnt-faq">—</div><div class="stat-sub">perguntas ativas</div></div>
-  </div>
-  <div class="grid2">
+<div class="content">
+
+  <!-- CONFIG -->
+  <div id="panel-config" class="panel active">
     <div class="card">
-      <h3>🚀 Início Rápido</h3>
-      <p style="font-size:14px;color:#64748b;line-height:2">
-        1. Escreva o <strong style="color:#a78bfa">Prompt do Agente</strong> — texto corrido, como quiser<br>
-        2. Cadastre seus <strong style="color:#a78bfa">Produtos</strong> no catálogo<br>
-        3. Configure o <strong style="color:#a78bfa">Fluxo de Vendas</strong> etapa por etapa<br>
-        4. Adicione <strong style="color:#a78bfa">Mídias</strong> (banners, tutoriais)<br>
-        5. Complete o <strong style="color:#a78bfa">FAQ</strong> com dúvidas frequentes
-      </p>
-    </div>
-    <div class="card">
-      <h3>📋 Status do Sistema</h3>
-      <div style="display:flex;flex-direction:column;gap:12px;font-size:14px" id="status-box">
-        <div style="display:flex;justify-content:space-between"><span>Banco de Dados</span><span class="badge bg">✓ Ativo</span></div>
-        <div style="display:flex;justify-content:space-between"><span>Fluxo de Vendas</span><span class="badge bg" id="st-flow">Carregando...</span></div>
-        <div style="display:flex;justify-content:space-between"><span>FAQ</span><span class="badge bg" id="st-faq">Carregando...</span></div>
-        <div style="display:flex;justify-content:space-between"><span>Prompt do Agente</span><span class="badge by" id="st-prompt">Verificando...</span></div>
+      <h2>⚙️ Configurações do Agente</h2>
+      <div id="configMsg"></div>
+      <label>Nome da Empresa</label>
+      <input type="text" id="cfg-empresa" placeholder="Ex: Loja da Jéssica">
+      <label>Saudação Padrão</label>
+      <input type="text" id="cfg-saudacao" placeholder="Ex: Olá! Seja bem-vindo(a)!">
+      <label>Chave PIX</label>
+      <input type="text" id="cfg-pix" placeholder="Ex: seu@email.com ou CPF">
+      <label>Prompt Geral (como o agente deve se comportar)</label>
+      <textarea id="cfg-prompt" rows="5" placeholder="Ex: Você é um atendente simpático da Loja X. Sempre trate o cliente pelo nome, seja cordial e objetivo..."></textarea>
+      <label>Regras do Agente</label>
+      <textarea id="cfg-regras" rows="4" placeholder="Ex: Nunca ofereça desconto sem autorização. Não fale sobre concorrentes..."></textarea>
+      <label>Script de Vendas</label>
+      <textarea id="cfg-script" rows="5" placeholder="Ex: 1. Cumprimente o cliente. 2. Pergunte o que procura. 3. Apresente o produto..."></textarea>
+      <div class="flex flex-end mt">
+        <button class="btn btn-primary" onclick="salvarConfig()">💾 Salvar Configurações</button>
       </div>
     </div>
   </div>
-</div>
 
-<!-- PRODUTOS -->
-<div id="page-produtos" class="page">
-  <div class="section-header">
-    <div><h1>Produtos</h1><p class="subtitle">Gerencie o catálogo completo</p></div>
-    <button class="btn btn-primary" onclick="openModal('mod-produto',null)">+ Novo Produto</button>
-  </div>
-  <div class="card" id="area-produtos"><div class="loading">⏳ Carregando produtos...</div></div>
-</div>
-
-<!-- MÍDIAS -->
-<div id="page-midias" class="page">
-  <div class="section-header">
-    <div><h1>Mídias Promocionais</h1><p class="subtitle">Banners, ofertas e tutoriais</p></div>
-    <button class="btn btn-primary" onclick="openModal('mod-midia',null)">+ Nova Mídia</button>
-  </div>
-  <div class="card" id="area-midias"><div class="loading">⏳ Carregando mídias...</div></div>
-</div>
-
-<!-- FLUXO -->
-<div id="page-flowsteps" class="page">
-  <div class="section-header">
-    <div><h1>Fluxo de Vendas</h1><p class="subtitle">Etapas da conversa do agente</p></div>
-    <button class="btn btn-primary" onclick="openModal('mod-step',null)">+ Nova Etapa</button>
-  </div>
-  <div id="area-steps"><div class="loading">⏳ Carregando etapas...</div></div>
-</div>
-
-<!-- FAQ -->
-<div id="page-faq" class="page">
-  <div class="section-header">
-    <div><h1>FAQ</h1><p class="subtitle">Perguntas e respostas frequentes</p></div>
-    <button class="btn btn-primary" onclick="openModal('mod-faq',null)">+ Nova Pergunta</button>
-  </div>
-  <div class="card" id="area-faq"><div class="loading">⏳ Carregando FAQ...</div></div>
-</div>
-
-<!-- PROMPT DO AGENTE -->
-<div id="page-prompt" class="page">
-  <h1>🧠 Prompt do Agente</h1>
-  <p class="subtitle">Escreva livremente como o agente deve se comportar — sem blocos, sem estrutura rígida</p>
-  <div class="card">
-    <h3>Instruções Gerais do Agente</h3>
-    <div class="form-group">
-      <textarea class="textarea-prompt" id="prompt-geral" oninput="contarChars('prompt-geral','cc-geral')"
-        placeholder="Escreva aqui tudo que o agente precisa saber...
-
-Exemplo:
-Você é um assistente de vendas da empresa Beleza Total. Seu tom é simpático, direto e confiante. Sempre trate o cliente pelo nome quando souber. Nunca invente informações sobre produtos — consulte sempre o catálogo real. Se o cliente perguntar sobre prazo de entrega, informe 3 a 7 dias úteis. Quando o cliente demonstrar interesse em comprar, apresente a oferta do dia antes de fechar o pedido. Aceite PIX, cartão de crédito e boleto. Nunca pressione o cliente — seja consultivo. Se a dúvida não estiver no FAQ, diga que vai verificar e encaminhe para o atendente humano..."></textarea>
-      <div class="char-count" id="cc-geral">0 caracteres</div>
-      <p class="prompt-tip">💡 Dica: escreva como se estivesse explicando para um funcionário novo. Quanto mais detalhado, mais preciso o agente vai ser.</p>
-    </div>
-  </div>
-  <div class="card">
-    <h3>Regras de Comportamento</h3>
-    <div class="form-group">
-      <textarea class="textarea-prompt" id="prompt-regras" oninput="contarChars('prompt-regras','cc-regras')" style="min-height:200px"
-        placeholder="Liste regras específicas de comportamento...
-
-Exemplo:
-- Nunca mencionar concorrentes
-- Não fazer descontos sem autorização
-- Sempre confirmar o endereço antes de fechar pedido
-- Enviar tutorial de pagamento PIX após cliente escolher PIX
-- Perguntar se é primeira compra antes de apresentar produto"></textarea>
-      <div class="char-count" id="cc-regras">0 caracteres</div>
-    </div>
-  </div>
-  <div class="card">
-    <h3>Script de Vendas (texto corrido)</h3>
-    <div class="form-group">
-      <textarea class="textarea-prompt" id="prompt-script" oninput="contarChars('prompt-script','cc-script')" style="min-height:240px"
-        placeholder="Escreva o roteiro de vendas em texto corrido, da forma mais natural possível...
-
-Exemplo:
-Quando o cliente chegar, cumprimente com entusiasmo e pergunte como pode ajudar. Depois de entender o interesse, apresente o produto mais relevante destacando o benefício principal — não o preço. Só fale o preço depois de despertar interesse. Se o cliente hesitar, apresente o depoimento de clientes satisfeitos e o prazo de troca. Feche sempre com urgência real: 'Esse lote tem poucas unidades' — mas nunca minta sobre o estoque."></textarea>
-      <div class="char-count" id="cc-script">0 caracteres</div>
-    </div>
-  </div>
-  <div style="display:flex;gap:12px;justify-content:flex-end">
-    <button class="btn btn-ghost" onclick="carregarPrompts()">↺ Descartar alterações</button>
-    <button class="btn btn-primary" onclick="salvarPrompts()">💾 Salvar Prompts</button>
-  </div>
-</div>
-
-<!-- CONFIGURAÇÕES -->
-<div id="page-config" class="page">
-  <h1>Configurações</h1>
-  <p class="subtitle">Ajuste o comportamento geral da IA</p>
-  <div class="card" id="area-config"><div class="loading">⏳ Carregando...</div></div>
-</div>
-
-
-<!-- SIMULADOR -->
-<div id="page-simulador" class="page">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-    <div><h1>💬 Simulador</h1><p class="subtitle">Teste o agente como se fosse um cliente real — usa o banco de dados real</p></div>
-    <button class="btn btn-ghost" onclick="resetarSim()">↺ Reiniciar conversa</button>
-  </div>
-  <div style="display:grid;grid-template-columns:1fr 340px;gap:20px;height:calc(100vh - 180px)">
-
-    <!-- CHAT -->
-    <div style="display:flex;flex-direction:column;background:#1a1a2e;border:1px solid #2d2d4e;border-radius:12px;overflow:hidden">
-      <div style="padding:14px 20px;border-bottom:1px solid #2d2d4e;display:flex;align-items:center;gap:12px">
-        <div style="width:36px;height:36px;border-radius:50%;background:#7c3aed;display:flex;align-items:center;justify-content:center;font-size:18px">🤖</div>
+  <!-- PRODUTOS -->
+  <div id="panel-produtos" class="panel">
+    <div class="card">
+      <h2>➕ Novo Produto</h2>
+      <div id="prodMsg"></div>
+      <div class="form-row">
         <div>
-          <div style="font-weight:600;font-size:14px" id="sim-agent-name">Agente IA</div>
-          <div style="font-size:11px;color:#34d399">● Online — simulando</div>
+          <label>Nome do Produto *</label>
+          <input type="text" id="prod-nome" placeholder="Ex: Camiseta Floral">
         </div>
-        <div style="margin-left:auto;display:flex;gap:8px">
-          <span class="badge bb" id="sim-etapa-badge">Etapa 1</span>
+        <div>
+          <label>Categoria</label>
+          <input type="text" id="prod-cat" placeholder="Ex: Roupas">
         </div>
       </div>
-
-      <div id="sim-chat" style="flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px">
-        <!-- mensagens aparecem aqui -->
+      <label>Descrição</label>
+      <textarea id="prod-desc" rows="3" placeholder="Descreva o produto..."></textarea>
+      <div class="form-row">
+        <div>
+          <label>Preço (R$)</label>
+          <input type="number" id="prod-preco" placeholder="0.00" step="0.01">
+        </div>
+        <div>
+          <label>Preço Promocional (R$)</label>
+          <input type="number" id="prod-promo" placeholder="0.00" step="0.01">
+        </div>
       </div>
-
-      <div style="padding:16px;border-top:1px solid #2d2d4e;display:flex;gap:10px">
-        <input id="sim-input" type="text" placeholder="Digite como se fosse o cliente..." onkeydown="if(event.key==='Enter')enviarSim()"
-          style="flex:1"/>
-        <button class="btn btn-primary" onclick="enviarSim()" id="sim-btn">Enviar ➤</button>
+      <div class="form-row">
+        <div>
+          <label>Estoque</label>
+          <input type="number" id="prod-estoque" placeholder="0">
+        </div>
+        <div>
+          <label>Tags (separadas por vírgula)</label>
+          <input type="text" id="prod-tags" placeholder="Ex: verão, promoção, novo">
+        </div>
+      </div>
+      <div class="flex mt">
+        <label style="margin:0;font-weight:normal;display:flex;align-items:center;gap:6px">
+          <input type="checkbox" id="prod-ativo" checked> Ativo
+        </label>
+        <label style="margin:0;font-weight:normal;display:flex;align-items:center;gap:6px">
+          <input type="checkbox" id="prod-destaque"> Destaque
+        </label>
+        <button class="btn btn-primary" style="margin-left:auto" onclick="salvarProduto()">💾 Salvar Produto</button>
       </div>
     </div>
+    <div class="card">
+      <h2>📦 Produtos Cadastrados</h2>
+      <div id="listaProdutos"><div class="empty">Carregando...</div></div>
+    </div>
+  </div>
 
-    <!-- PAINEL LATERAL -->
-    <div style="display:flex;flex-direction:column;gap:16px;overflow-y:auto">
-      <div class="card" style="margin-bottom:0">
-        <h3>📊 Estado da Conversa</h3>
-        <div style="display:flex;flex-direction:column;gap:10px;font-size:13px">
-          <div style="display:flex;justify-content:space-between"><span style="color:#64748b">Etapa atual</span><span id="sd-etapa" style="font-weight:600;color:#a78bfa">—</span></div>
-          <div style="display:flex;justify-content:space-between"><span style="color:#64748b">Tipo</span><span id="sd-tipo">—</span></div>
-          <div style="display:flex;justify-content:space-between"><span style="color:#64748b">Próxima etapa</span><span id="sd-prox">—</span></div>
-          <div style="display:flex;justify-content:space-between"><span style="color:#64748b">Mensagens</span><span id="sd-msgs">0</span></div>
-          <div style="display:flex;justify-content:space-between"><span style="color:#64748b">Produto detectado</span><span id="sd-prod" style="font-size:12px;color:#fbbf24">—</span></div>
+  <!-- FAQ -->
+  <div id="panel-faq" class="panel">
+    <div class="card">
+      <h2>➕ Nova Pergunta</h2>
+      <div id="faqMsg"></div>
+      <label>Pergunta *</label>
+      <input type="text" id="faq-perg" placeholder="Ex: Qual o prazo de entrega?">
+      <label>Resposta *</label>
+      <textarea id="faq-resp" rows="3" placeholder="Ex: O prazo de entrega é de 3 a 5 dias úteis..."></textarea>
+      <div class="form-row">
+        <div>
+          <label>Categoria</label>
+          <input type="text" id="faq-cat" placeholder="Ex: Entrega, Pagamento...">
+        </div>
+        <div>
+          <label>Palavras-chave</label>
+          <input type="text" id="faq-kw" placeholder="prazo, entrega, envio">
         </div>
       </div>
+      <div class="flex flex-end mt">
+        <button class="btn btn-primary" onclick="salvarFaq()">💾 Salvar FAQ</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2>❓ FAQs Cadastradas</h2>
+      <div id="listaFaq"><div class="empty">Carregando...</div></div>
+    </div>
+  </div>
 
-      <div class="card" style="margin-bottom:0">
-        <h3>⚡ Atalhos Rápidos</h3>
-        <div style="display:flex;flex-direction:column;gap:8px" id="sim-atalhos">
-          <button class="btn btn-ghost" style="text-align:left;font-size:13px" onclick="simMsg('Oi')">👋 "Oi"</button>
-          <button class="btn btn-ghost" style="text-align:left;font-size:13px" onclick="simMsg('Quero comprar')">🛒 "Quero comprar"</button>
-          <button class="btn btn-ghost" style="text-align:left;font-size:13px" onclick="simMsg('Qual o preço?')">💰 "Qual o preço?"</button>
-          <button class="btn btn-ghost" style="text-align:left;font-size:13px" onclick="simMsg('Quero 2 unidades')">🔢 "Quero 2 unidades"</button>
-          <button class="btn btn-ghost" style="text-align:left;font-size:13px" onclick="simMsg('SP')">📍 "SP"</button>
-          <button class="btn btn-ghost" style="text-align:left;font-size:13px" onclick="simMsg('PIX')">💳 "PIX"</button>
-          <button class="btn btn-ghost" style="text-align:left;font-size:13px" onclick="simMsg('Qual o prazo de entrega?')">📦 "Prazo de entrega?"</button>
-          <button class="btn btn-ghost" style="text-align:left;font-size:13px" onclick="simMsg('Aceita troca?')">🔄 "Aceita troca?"</button>
+  <!-- FLUXO -->
+  <div id="panel-fluxo" class="panel">
+    <div class="card">
+      <h2>➕ Nova Etapa do Fluxo</h2>
+      <div id="fluxoMsg"></div>
+      <div class="form-row">
+        <div>
+          <label>Nome da Etapa *</label>
+          <input type="text" id="flow-nome" placeholder="Ex: Boas-vindas">
+        </div>
+        <div>
+          <label>Número da Etapa</label>
+          <input type="number" id="flow-etapa" placeholder="1">
         </div>
       </div>
-
-      <div class="card" style="margin-bottom:0">
-        <h3>📝 Log do Motor</h3>
-        <div id="sim-log" style="font-size:11px;color:#64748b;line-height:1.8;max-height:200px;overflow-y:auto;font-family:monospace">
-          <div>Aguardando início...</div>
+      <label>Mensagem *</label>
+      <textarea id="flow-msg" rows="3" placeholder="Ex: Olá! Seja bem-vindo! Como posso te ajudar hoje?"></textarea>
+      <div class="form-row">
+        <div>
+          <label>Palavras-chave (trigger)</label>
+          <input type="text" id="flow-kw" placeholder="oi, olá, bom dia">
         </div>
+        <div>
+          <label>Próxima Etapa (número)</label>
+          <input type="number" id="flow-prox" placeholder="2">
+        </div>
+      </div>
+      <div class="flex flex-end mt">
+        <button class="btn btn-primary" onclick="salvarFluxo()">💾 Salvar Etapa</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2>🔄 Etapas do Fluxo</h2>
+      <div id="listaFluxo"><div class="empty">Carregando...</div></div>
+    </div>
+  </div>
+
+  <!-- SIMULADOR -->
+  <div id="panel-simulador" class="panel">
+    <div class="card">
+      <h2>💬 Simulador de Conversa</h2>
+      <p style="font-size:13px;color:#666;margin-bottom:12px">Teste como o agente responde usando os dados cadastrados.</p>
+      <div class="sim-box" id="simBox">
+        <div class="msg-bot">👋 Olá! Sou o agente de IA. Digite uma mensagem para começar o teste.</div>
+      </div>
+      <div class="sim-input">
+        <input type="text" id="simInput" placeholder="Digite sua mensagem..." onkeydown="if(event.key==='Enter') enviarSim()">
+        <button class="btn btn-primary" onclick="enviarSim()">Enviar</button>
+        <button class="btn" style="background:#eee" onclick="limparSim()">🗑️</button>
       </div>
     </div>
   </div>
+
 </div>
 
-</div><!-- /main -->
+<script>
+const API = 'https://6a0f4d8a297ab30a46bb31c3.base44.app/functions/admApi';
 
-<!-- MODAL PRODUTO -->
-<div class="modal-overlay" id="mod-produto">
-  <div class="modal">
-    <h2>📦 <span id="mp-title">Novo Produto</span></h2>
-    <input type="hidden" id="mp-id"/>
-    <div class="form-group"><label>Nome *</label><input id="mp-nome" placeholder="Ex: Creme Facial Premium"/></div>
-    <div class="form-group"><label>Descrição</label><textarea id="mp-desc" placeholder="Descreva o produto..."></textarea></div>
-    <div class="form-row">
-      <div class="form-group"><label>Preço (R$)</label><input type="number" id="mp-preco" step="0.01" placeholder="0.00"/></div>
-      <div class="form-group"><label>Preço Promo (R$)</label><input type="number" id="mp-promo" step="0.01" placeholder="0.00"/></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>Categoria</label><input id="mp-cat" placeholder="Beleza, Saúde..."/></div>
-      <div class="form-group"><label>Estoque</label><input type="number" id="mp-estoque" placeholder="0"/></div>
-    </div>
-    <div class="form-group">
-      <label>Foto do Produto</label>
-      <div class="upload-zone" id="uz-prod-foto" ondragover="dzOver(event,'uz-prod-foto')" ondragleave="dzLeave('uz-prod-foto')" ondrop="dzDrop(event,'uz-prod-foto','mp-foto-input','mp-foto-preview','mp-foto')">
-        <input type="file" id="mp-foto-input" accept="image/*" onchange="handleFileSelect(this,'mp-foto-preview','mp-foto','mp-foto-bar','mp-foto-status')"/>
-        <div class="uz-icon">📷</div>
-        <div class="uz-label">Clique ou arraste a foto</div>
-        <div class="uz-sub">JPG, PNG, WEBP, GIF · Máx 50MB</div>
-      </div>
-      <div class="upload-bar"><div class="upload-bar-fill" id="mp-foto-bar"></div></div>
-      <div id="mp-foto-status"></div>
-      <div id="mp-foto-preview"></div>
-      <input type="hidden" id="mp-foto"/>
-    </div>
-    <div class="form-group">
-      <label>Vídeo do Produto (opcional)</label>
-      <div class="upload-zone" id="uz-prod-video" ondragover="dzOver(event,'uz-prod-video')" ondragleave="dzLeave('uz-prod-video')" ondrop="dzDrop(event,'uz-prod-video','mp-video-input','mp-video-preview','mp-video')">
-        <input type="file" id="mp-video-input" accept="video/*" onchange="handleFileSelect(this,'mp-video-preview','mp-video','mp-video-bar','mp-video-status')"/>
-        <div class="uz-icon">🎬</div>
-        <div class="uz-label">Clique ou arraste o vídeo</div>
-        <div class="uz-sub">MP4, WEBM, MOV · Máx 50MB</div>
-      </div>
-      <div class="upload-bar"><div class="upload-bar-fill" id="mp-video-bar"></div></div>
-      <div id="mp-video-status"></div>
-      <div id="mp-video-preview"></div>
-      <input type="hidden" id="mp-video"/>
-    </div>
-    <div class="form-group"><label>Tags (vírgula)</label><input id="mp-tags" placeholder="creme, pele, facial"/></div>
-    <div class="form-row">
-      <div class="form-group"><label>Ativo</label><select id="mp-ativo"><option value="true">✅ Sim</option><option value="false">❌ Não</option></select></div>
-      <div class="form-group"><label>Destaque</label><select id="mp-dest"><option value="false">Não</option><option value="true">⭐ Sim</option></select></div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('mod-produto')">Cancelar</button>
-      <button class="btn btn-primary" onclick="salvarProduto()">💾 Salvar</button>
-    </div>
-  </div>
-</div>
+// ===================== TABS =====================
+function showTab(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  event.target.classList.add('active');
+  if (name === 'produtos') carregarProdutos();
+  if (name === 'faq') carregarFaq();
+  if (name === 'fluxo') carregarFluxo();
+}
 
-<!-- MODAL MÍDIA -->
-<div class="modal-overlay" id="mod-midia">
-  <div class="modal">
-    <h2>🖼️ <span id="mm-title">Nova Mídia</span></h2>
-    <input type="hidden" id="mm-id"/>
-    <div class="form-group"><label>Título *</label><input id="mm-titulo" placeholder="Ex: Banner Dia das Mães"/></div>
-    <div class="form-group"><label>Tipo</label>
-      <select id="mm-tipo">
-        <option value="banner">🖼️ Banner</option>
-        <option value="oferta">🔥 Oferta</option>
-        <option value="imagem_promocional">📸 Imagem Promocional</option>
-        <option value="tutorial_pagamento">💳 Tutorial de Pagamento</option>
-        <option value="outro">📁 Outro</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label>Arquivo (foto ou vídeo) *</label>
-      <div class="upload-zone" id="uz-midia" ondragover="dzOver(event,'uz-midia')" ondragleave="dzLeave('uz-midia')" ondrop="dzDrop(event,'uz-midia','mm-file-input','mm-preview','mm-url')">
-        <input type="file" id="mm-file-input" accept="image/*,video/*" onchange="handleFileSelect(this,'mm-preview','mm-url','mm-bar','mm-status')"/>
-        <div class="uz-icon">📁</div>
-        <div class="uz-label">Clique ou arraste aqui para enviar</div>
-        <div class="uz-sub">Imagens: JPG, PNG, GIF, WEBP · Vídeos: MP4, WEBM · Máx 50MB</div>
-      </div>
-      <div class="upload-bar"><div class="upload-bar-fill" id="mm-bar"></div></div>
-      <div id="mm-status"></div>
-      <div id="mm-preview"></div>
-      <input type="hidden" id="mm-url"/>
-    </div>
-    <div class="form-group"><label>Descrição</label><textarea id="mm-desc" placeholder="Legenda ou descrição..."></textarea></div>
-    <div class="form-row">
-      <div class="form-group"><label>Validade</label><input type="date" id="mm-val"/></div>
-      <div class="form-group"><label>Ordem</label><input type="number" id="mm-ordem" placeholder="1"/></div>
-    </div>
-    <div class="form-group"><label>Ativo</label><select id="mm-ativo"><option value="true">✅ Sim</option><option value="false">❌ Não</option></select></div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('mod-midia')">Cancelar</button>
-      <button class="btn btn-primary" onclick="salvarMidia()">💾 Salvar</button>
-    </div>
-  </div>
-</div>
-<!-- MODAL FLOWSTEP -->
-<div class="modal-overlay" id="mod-step">
-  <div class="modal">
-    <h2>🔄 <span id="ms-title">Nova Etapa</span></h2>
-    <input type="hidden" id="ms-id"/>
-    <div class="form-row">
-      <div class="form-group"><label>Nº da Etapa *</label><input type="number" id="ms-etapa" placeholder="Ex: 7"/></div>
-      <div class="form-group"><label>Nome *</label><input id="ms-nome" placeholder="Ex: Confirmação"/></div>
-    </div>
-    <div class="form-group"><label>Tipo</label>
-      <select id="ms-tipo">
-        <option value="saudacao">👋 Saudação</option>
-        <option value="produto">📦 Produto</option>
-        <option value="oferta">🔥 Oferta</option>
-        <option value="quantidade">🔢 Quantidade</option>
-        <option value="estado">📍 Estado</option>
-        <option value="pagamento">💳 Pagamento</option>
-        <option value="faq">❓ FAQ</option>
-        <option value="encerramento">✅ Encerramento</option>
-        <option value="outro">📁 Outro</option>
-      </select>
-    </div>
-    <div class="form-group"><label>Mensagem do Agente *</label><textarea id="ms-msg" placeholder="Escreva o que o agente diz nessa etapa..." style="min-height:120px"></textarea></div>
-    <div class="form-row">
-      <div class="form-group"><label>Próxima Etapa Nº</label><input type="number" id="ms-prox" placeholder="Ex: 3 (deixe vazio se for o fim)"/></div>
-      <div class="form-group"><label>URL de Mídia (opcional)</label><input id="ms-midia" placeholder="https://..."/></div>
-    </div>
-    <div class="form-group"><label>Palavras-chave (vírgula)</label><input id="ms-palavras" placeholder="comprar, quero, pedido"/></div>
-    <div class="form-group"><label>Ativo</label><select id="ms-ativo"><option value="true">✅ Sim</option><option value="false">❌ Não</option></select></div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('mod-step')">Cancelar</button>
-      <button class="btn btn-primary" onclick="salvarStep()">💾 Salvar</button>
-    </div>
-  </div>
-</div>
+// ===================== API =====================
+async function api(path, method='GET', body=null) {
+  const opts = { method, headers: { 'Content-Type': 'application/json' } };
+  if (body) opts.body = JSON.stringify(body);
+  const r = await fetch(API + path, opts);
+  return r.json();
+}
 
-<!-- MODAL FAQ -->
-<div class="modal-overlay" id="mod-faq">
-  <div class="modal">
-    <h2>❓ <span id="mf-title">Nova Pergunta</span></h2>
-    <input type="hidden" id="mf-id"/>
-    <div class="form-group"><label>Pergunta *</label><input id="mf-perg" placeholder="Ex: Qual o prazo de entrega?"/></div>
-    <div class="form-group"><label>Resposta *</label><textarea id="mf-resp" placeholder="Resposta completa..."></textarea></div>
-    <div class="form-group"><label>Categoria</label><input id="mf-cat" placeholder="entrega, pagamento, troca..."/></div>
-    <div class="form-group"><label>Palavras-chave (vírgula)</label><input id="mf-palavras" placeholder="prazo, demora, quando chega"/></div>
-    <div class="form-row">
-      <div class="form-group"><label>Ordem</label><input type="number" id="mf-ordem" placeholder="1"/></div>
-      <div class="form-group"><label>Ativo</label><select id="mf-ativo"><option value="true">✅ Sim</option><option value="false">❌ Não</option></select></div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('mod-faq')">Cancelar</button>
-      <button class="btn btn-primary" onclick="salvarFAQ()">💾 Salvar</button>
-    </div>
-  </div>
-</div>
+function showMsg(id, text, type='success') {
+  const el = document.getElementById(id);
+  el.innerHTML = `<div class="msg msg-${type}">${text}</div>`;
+  setTimeout(() => el.innerHTML = '', 4000);
+}
 
-<script src="app.js"></script>
+// ===================== STATUS =====================
+async function checkApi() {
+  try {
+    const r = await api('/produtos');
+    if (Array.isArray(r) || r.data) {
+      document.getElementById('apiStatus').textContent = '✅ Conectado';
+      document.getElementById('apiStatus').className = 'api-status api-ok';
+    }
+  } catch(e) {
+    document.getElementById('apiStatus').textContent = '❌ Sem conexão';
+    document.getElementById('apiStatus').className = 'api-status api-err';
+  }
+}
+
+// ===================== CONFIG =====================
+async function carregarConfig() {
+  try {
+    const data = await api('/configuracoes');
+    const list = data.data || data || [];
+    const map = {};
+    list.forEach(c => map[c.chave] = c.valor);
+    if (map.nome_empresa) document.getElementById('cfg-empresa').value = map.nome_empresa;
+    if (map.saudacao_padrao) document.getElementById('cfg-saudacao').value = map.saudacao_padrao;
+    if (map.chave_pix) document.getElementById('cfg-pix').value = map.chave_pix;
+    if (map.prompt_geral) document.getElementById('cfg-prompt').value = map.prompt_geral;
+    if (map.prompt_regras) document.getElementById('cfg-regras').value = map.prompt_regras;
+    if (map.prompt_script) document.getElementById('cfg-script').value = map.prompt_script;
+  } catch(e) {}
+}
+
+async function salvarConfig() {
+  const configs = [
+    { chave: 'nome_empresa', valor: document.getElementById('cfg-empresa').value, categoria: 'geral' },
+    { chave: 'saudacao_padrao', valor: document.getElementById('cfg-saudacao').value, categoria: 'geral' },
+    { chave: 'chave_pix', valor: document.getElementById('cfg-pix').value, categoria: 'pagamento' },
+    { chave: 'prompt_geral', valor: document.getElementById('cfg-prompt').value, categoria: 'prompt' },
+    { chave: 'prompt_regras', valor: document.getElementById('cfg-regras').value, categoria: 'prompt' },
+    { chave: 'prompt_script', valor: document.getElementById('cfg-script').value, categoria: 'prompt' },
+  ];
+  try {
+    await api('/configuracoes', 'POST', { configs });
+    showMsg('configMsg', '✅ Configurações salvas com sucesso!', 'success');
+  } catch(e) {
+    showMsg('configMsg', '❌ Erro ao salvar: ' + e.message, 'error');
+  }
+}
+
+// ===================== PRODUTOS =====================
+async function carregarProdutos() {
+  document.getElementById('listaProdutos').innerHTML = '<div class="empty">Carregando...</div>';
+  try {
+    const data = await api('/produtos');
+    const list = data.data || data || [];
+    if (!list.length) { document.getElementById('listaProdutos').innerHTML = '<div class="empty">Nenhum produto cadastrado ainda.</div>'; return; }
+    document.getElementById('listaProdutos').innerHTML = list.map(p => `
+      <div class="item">
+        <div class="flex">
+          <div style="flex:1">
+            <div class="item-title">${p.nome}</div>
+            <div class="item-sub">${p.categoria || ''} ${p.preco ? '| R$ '+Number(p.preco).toFixed(2) : ''} ${p.preco_promocional ? '→ R$ '+Number(p.preco_promocional).toFixed(2) : ''}</div>
+            <div class="item-sub" style="margin-top:4px">${p.descricao || ''}</div>
+          </div>
+          <div style="display:flex;gap:6px;align-items:flex-start">
+            <span class="badge ${p.ativo ? 'badge-green' : 'badge-red'}">${p.ativo ? 'Ativo' : 'Inativo'}</span>
+            ${p.destaque ? '<span class="badge badge-blue">⭐ Destaque</span>' : ''}
+            <button class="btn btn-danger btn-sm" onclick="deletarProduto('${p.id}')">🗑️</button>
+          </div>
+        </div>
+      </div>`).join('');
+  } catch(e) {
+    document.getElementById('listaProdutos').innerHTML = '<div class="empty">Erro ao carregar produtos.</div>';
+  }
+}
+
+async function salvarProduto() {
+  const nome = document.getElementById('prod-nome').value.trim();
+  if (!nome) { showMsg('prodMsg', '❌ Nome do produto é obrigatório.', 'error'); return; }
+  const tags = document.getElementById('prod-tags').value.split(',').map(t => t.trim()).filter(Boolean);
+  const prod = {
+    nome,
+    descricao: document.getElementById('prod-desc').value,
+    preco: parseFloat(document.getElementById('prod-preco').value) || 0,
+    preco_promocional: parseFloat(document.getElementById('prod-promo').value) || 0,
+    categoria: document.getElementById('prod-cat').value,
+    estoque: parseInt(document.getElementById('prod-estoque').value) || 0,
+    tags,
+    ativo: document.getElementById('prod-ativo').checked,
+    destaque: document.getElementById('prod-destaque').checked,
+  };
+  try {
+    await api('/produtos', 'POST', prod);
+    showMsg('prodMsg', '✅ Produto salvo com sucesso!', 'success');
+    ['prod-nome','prod-desc','prod-preco','prod-promo','prod-cat','prod-estoque','prod-tags'].forEach(id => document.getElementById(id).value = '');
+    carregarProdutos();
+  } catch(e) {
+    showMsg('prodMsg', '❌ Erro ao salvar: ' + e.message, 'error');
+  }
+}
+
+async function deletarProduto(id) {
+  if (!confirm('Deletar este produto?')) return;
+  await api('/produtos/' + id, 'DELETE');
+  carregarProdutos();
+}
+
+// ===================== FAQ =====================
+async function carregarFaq() {
+  document.getElementById('listaFaq').innerHTML = '<div class="empty">Carregando...</div>';
+  try {
+    const data = await api('/faq');
+    const list = data.data || data || [];
+    if (!list.length) { document.getElementById('listaFaq').innerHTML = '<div class="empty">Nenhuma FAQ cadastrada ainda.</div>'; return; }
+    document.getElementById('listaFaq').innerHTML = list.map(f => `
+      <div class="item">
+        <div class="flex">
+          <div style="flex:1">
+            <div class="item-title">❓ ${f.pergunta}</div>
+            <div class="item-sub" style="margin-top:4px">${f.resposta}</div>
+            ${f.categoria ? `<span class="badge badge-blue" style="margin-top:6px">${f.categoria}</span>` : ''}
+          </div>
+          <button class="btn btn-danger btn-sm" onclick="deletarFaq('${f.id}')">🗑️</button>
+        </div>
+      </div>`).join('');
+  } catch(e) {
+    document.getElementById('listaFaq').innerHTML = '<div class="empty">Erro ao carregar FAQs.</div>';
+  }
+}
+
+async function salvarFaq() {
+  const pergunta = document.getElementById('faq-perg').value.trim();
+  const resposta = document.getElementById('faq-resp').value.trim();
+  if (!pergunta || !resposta) { showMsg('faqMsg', '❌ Pergunta e resposta são obrigatórias.', 'error'); return; }
+  const kw = document.getElementById('faq-kw').value.split(',').map(t => t.trim()).filter(Boolean);
+  try {
+    await api('/faq', 'POST', { pergunta, resposta, categoria: document.getElementById('faq-cat').value, palavras_chave: kw, ativo: true });
+    showMsg('faqMsg', '✅ FAQ salva!', 'success');
+    ['faq-perg','faq-resp','faq-cat','faq-kw'].forEach(id => document.getElementById(id).value = '');
+    carregarFaq();
+  } catch(e) {
+    showMsg('faqMsg', '❌ Erro: ' + e.message, 'error');
+  }
+}
+
+async function deletarFaq(id) {
+  if (!confirm('Deletar esta FAQ?')) return;
+  await api('/faq/' + id, 'DELETE');
+  carregarFaq();
+}
+
+// ===================== FLUXO =====================
+async function carregarFluxo() {
+  document.getElementById('listaFluxo').innerHTML = '<div class="empty">Carregando...</div>';
+  try {
+    const data = await api('/fluxo');
+    const list = data.data || data || [];
+    if (!list.length) { document.getElementById('listaFluxo').innerHTML = '<div class="empty">Nenhuma etapa cadastrada ainda.</div>'; return; }
+    const sorted = list.sort((a,b) => (a.etapa||0) - (b.etapa||0));
+    document.getElementById('listaFluxo').innerHTML = sorted.map(f => `
+      <div class="item">
+        <div class="flex">
+          <div style="flex:1">
+            <div class="item-title">Etapa ${f.etapa}: ${f.nome}</div>
+            <div class="item-sub" style="margin-top:4px">${f.mensagem}</div>
+            ${f.palavras_chave?.length ? `<div class="item-sub">🔑 ${Array.isArray(f.palavras_chave) ? f.palavras_chave.join(', ') : f.palavras_chave}</div>` : ''}
+          </div>
+          <button class="btn btn-danger btn-sm" onclick="deletarFluxo('${f.id}')">🗑️</button>
+        </div>
+      </div>`).join('');
+  } catch(e) {
+    document.getElementById('listaFluxo').innerHTML = '<div class="empty">Erro ao carregar fluxo.</div>';
+  }
+}
+
+async function salvarFluxo() {
+  const nome = document.getElementById('flow-nome').value.trim();
+  const mensagem = document.getElementById('flow-msg').value.trim();
+  if (!nome || !mensagem) { showMsg('fluxoMsg', '❌ Nome e mensagem são obrigatórios.', 'error'); return; }
+  const kw = document.getElementById('flow-kw').value.split(',').map(t => t.trim()).filter(Boolean);
+  try {
+    await api('/fluxo', 'POST', {
+      nome, mensagem,
+      etapa: parseInt(document.getElementById('flow-etapa').value) || 1,
+      proxima_etapa: parseInt(document.getElementById('flow-prox').value) || null,
+      palavras_chave: kw, ativo: true
+    });
+    showMsg('fluxoMsg', '✅ Etapa salva!', 'success');
+    ['flow-nome','flow-msg','flow-kw','flow-etapa','flow-prox'].forEach(id => document.getElementById(id).value = '');
+    carregarFluxo();
+  } catch(e) {
+    showMsg('fluxoMsg', '❌ Erro: ' + e.message, 'error');
+  }
+}
+
+async function deletarFluxo(id) {
+  if (!confirm('Deletar esta etapa?')) return;
+  await api('/fluxo/' + id, 'DELETE');
+  carregarFluxo();
+}
+
+// ===================== SIMULADOR =====================
+let simContext = { etapa: 1 };
+
+async function enviarSim() {
+  const input = document.getElementById('simInput');
+  const texto = input.value.trim();
+  if (!texto) return;
+  input.value = '';
+  addSimMsg(texto, 'user');
+  const loading = addSimMsg('...', 'bot');
+  try {
+    const r = await api('/simular', 'POST', { mensagem: texto, contexto: simContext });
+    loading.textContent = r.resposta || 'Sem resposta';
+    if (r.contexto) simContext = r.contexto;
+  } catch(e) {
+    loading.textContent = '❌ Erro ao simular. Verifique a conexão com a API.';
+  }
+}
+
+function addSimMsg(text, type) {
+  const box = document.getElementById('simBox');
+  const div = document.createElement('div');
+  div.className = type === 'user' ? 'msg-user' : 'msg-bot';
+  div.textContent = text;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+  return div;
+}
+
+function limparSim() {
+  simContext = { etapa: 1 };
+  document.getElementById('simBox').innerHTML = '<div class="msg-bot">👋 Conversa reiniciada! Digite uma mensagem para começar.</div>';
+}
+
+// ===================== INIT =====================
+checkApi();
+carregarConfig();
+</script>
 </body>
 </html>
