@@ -67,11 +67,11 @@ textarea { min-height: 100px; resize: vertical; }
 </div>
 
 <div class="tabs">
-  <div class="tab active" onclick="showTab('config')">⚙️ Configurações</div>
-  <div class="tab" onclick="showTab('produtos')">📦 Produtos</div>
-  <div class="tab" onclick="showTab('faq')">❓ FAQ</div>
-  <div class="tab" onclick="showTab('fluxo')">🔄 Fluxo</div>
-  <div class="tab" onclick="showTab('simulador')">💬 Simulador</div>
+  <div class="tab active" onclick="showTab('config', this)">⚙️ Configurações</div>
+  <div class="tab" onclick="showTab('produtos', this)">📦 Produtos</div>
+  <div class="tab" onclick="showTab('faq', this)">❓ FAQ</div>
+  <div class="tab" onclick="showTab('fluxo', this)">🔄 Fluxo</div>
+  <div class="tab" onclick="showTab('simulador', this)">💬 Simulador</div>
 </div>
 
 <div class="content">
@@ -240,11 +240,11 @@ textarea { min-height: 100px; resize: vertical; }
 const API = 'https://6a0f4d8a297ab30a46bb31c3.base44.app/functions/admApi';
 
 // ===================== TABS =====================
-function showTab(name) {
+function showTab(name, el) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById('panel-' + name).classList.add('active');
-  event.target.classList.add('active');
+  if (el) el.classList.add('active');
   if (name === 'produtos') carregarProdutos();
   if (name === 'faq') carregarFaq();
   if (name === 'fluxo') carregarFluxo();
